@@ -449,3 +449,28 @@ copyinstr(pagetable_t pagetable, char *dst, uint64 srcva, uint64 max)
     return -1;
   }
 }
+
+// 打印 pte pte中的值(64bits)，pa 物理页号的起始地址
+void visitPTE(pagetable_t pagetable, int level) {
+  for (int i = 0; i < 512; i++ ) {
+    if ((pagetable[i] & PTE_V) == 0) continue;
+    
+    for (int j = 0; j < level; j++ ) {
+      if (j == level - 1) {
+        printf("..%d: ", i);
+      }else 
+        printf(".. ");
+    }
+    printf("pte %p pa %p\n", pagetable[i], (pagetable_t)PTE2PA((uint64)*(pagetable + i)));
+    
+    if ((pagetable[i] & (PTE_R | PTE_W | PTE_X)) == 0) {
+      visitPTE((pagetable_t)PTE2PA((uint64)pagetable[i]), level + 1);
+    }
+
+  }
+}
+
+void vmprint(pagetable_t pagetable) {
+  printf("page table %p\n", pagetable);
+  visitPTE(pagetable, 1);
+}
