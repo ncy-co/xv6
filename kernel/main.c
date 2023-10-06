@@ -1,3 +1,11 @@
+/* 
+ * Author: bye
+ * Date: 2023-10-04 14:35:29
+ * LastEditors: bye
+ * LastEditTime: 2023-10-05 16:36:22
+ * FilePath: /study/xv6-labs-2023/kernel/main.c
+ * Description: 
+ */
 #include "types.h"
 #include "param.h"
 #include "memlayout.h"

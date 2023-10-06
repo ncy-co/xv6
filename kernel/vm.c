@@ -73,7 +73,7 @@ kvminithart()
 // Return the address of the PTE in page table pagetable
 // that corresponds to virtual address va.  If alloc!=0,
 // create any required page-table pages.
-//
+// 将虚拟页号转换为最终的物理页号所在的页表项的地址
 // The risc-v Sv39 scheme has three levels of page-table
 // pages. A page-table page contains 512 64-bit PTEs.
 // A 64-bit virtual address is split into five fields:
@@ -362,6 +362,7 @@ copyout(pagetable_t pagetable, uint64 dstva, char *src, uint64 len)
   pte_t *pte;
 
   while(len > 0){
+    // va0 为虚拟页号的起始地址
     va0 = PGROUNDDOWN(dstva);
     if(va0 >= MAXVA)
       return -1;
