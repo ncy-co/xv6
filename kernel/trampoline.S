@@ -94,6 +94,7 @@ uservec:
         # flush now-stale user entries from the TLB.
         sfence.vma zero, zero
 
+        // 至此，sp存放内核栈顶，t0存放usertrap函数地址，satp设置为了kernel page table地址
         # jump to usertrap(), which does not return
         jr t0
 

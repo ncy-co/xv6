@@ -70,7 +70,7 @@ sys_sleep(void)
 }
 
 
-//#ifdef LAB_PGTBL
+#ifdef LAB_PGTBL
 int
 sys_pgaccess(void)
 {
@@ -102,11 +102,11 @@ sys_pgaccess(void)
     if (i >= num_pages) break;
   }
 
-  // 将 以&mask为起始地址，长度为sizeof(mask) 的内存数据复制到，access_mask 的起始地址中
+  // 将 以&mask为起始地址，长度为sizeof(mask) 的内存数据复制到，access_mask（所对应的物理地址，需要walk函数转换）的起始地址中
   copyout(myproc()->pagetable, access_mask, (char*)&mask, sizeof(mask));
   return 0;
 }
-//#endif
+#endif
 
 uint64
 sys_kill(void)

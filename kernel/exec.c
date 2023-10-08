@@ -90,6 +90,7 @@ exec(char *path, char **argv)
   stackbase = sp - PGSIZE;
 
   // Push argument strings, prepare rest of stack in ustack.
+  // 将参数字符串，压栈
   for(argc = 0; argv[argc]; argc++) {
     if(argc >= MAXARG)
       goto bad;
