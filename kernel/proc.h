@@ -100,10 +100,13 @@ struct proc {
   uint64 sz;                   // Size of process memory (bytes)
   pagetable_t pagetable;       // User page table
   struct trapframe *trapframe; // data page for trampoline.S
+  struct trapframe *pre_trapframe; // 用于 sigalarm
   struct context context;      // swtch() here to run process
   struct file *ofile[NOFILE];  // Open files
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
   int ticks;                   // sigalarm 中设置的警报间隔
   void (*handler)();       // sigalarm 中设置的警报处理函数，即到时发生警报之后执行该函数
+  int ticks_past;           // sigalarm 中已经经过的ticks数
+  int handler_on;           // 表示是否在进行sigalarm 中的handler
 };

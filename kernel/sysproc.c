@@ -2,7 +2,7 @@
  * Author: bye
  * Date: 2023-10-08 10:17:45
  * LastEditors: bye
- * LastEditTime: 2023-10-10 16:40:39
+ * LastEditTime: 2023-10-10 20:24:50
  * FilePath: /study/xv6-labs-2023/kernel/sysproc.c
  * Description: 
  */
@@ -108,7 +108,13 @@ uint64 sys_sigalarm(void) {
   return 0;
 }
 
+// 恢复 sigalarm调用时，修改的trapframe值, 执行完 sigreturn，本次sigalarm调用才算结束，期间不允许在进行该系统调用
 uint64 sys_sigreturn(void) {
-  
-  return 0;
+  struct proc *p = myproc();
+  if (p->handler_on) {
+    *p->trapframe = *p->pre_trapframe;
+    p->handler_on = 0;
+    p->ticks_past = 0;
+  }
+  return p->trapframe->a0;
 }
