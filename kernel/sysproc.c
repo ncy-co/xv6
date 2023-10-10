@@ -1,3 +1,11 @@
+/* 
+ * Author: bye
+ * Date: 2023-10-08 10:17:45
+ * LastEditors: bye
+ * LastEditTime: 2023-10-10 16:40:39
+ * FilePath: /study/xv6-labs-2023/kernel/sysproc.c
+ * Description: 
+ */
 #include "types.h"
 #include "riscv.h"
 #include "defs.h"
@@ -59,6 +67,7 @@ sys_sleep(void)
     n = 0;
   acquire(&tickslock);
   ticks0 = ticks;
+  backtrace();
   while(ticks - ticks0 < n){
     if(killed(myproc())){
       release(&tickslock);
@@ -90,4 +99,16 @@ sys_uptime(void)
   xticks = ticks;
   release(&tickslock);
   return xticks;
+}
+
+uint64 sys_sigalarm(void) {
+  struct proc *proc = myproc();
+  proc->ticks = proc->trapframe->a0;
+  proc->handler = (void (*)())(proc->trapframe->a1);
+  return 0;
+}
+
+uint64 sys_sigreturn(void) {
+  
+  return 0;
 }

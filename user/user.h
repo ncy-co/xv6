@@ -1,3 +1,11 @@
+/* 
+ * Author: bye
+ * Date: 2023-10-08 10:17:45
+ * LastEditors: bye
+ * LastEditTime: 2023-10-10 14:45:43
+ * FilePath: /study/xv6-labs-2023/user/user.h
+ * Description: 
+ */
 struct stat;
 
 // system calls
@@ -39,3 +47,6 @@ void free(void*);
 int atoi(const char*);
 int memcmp(const void *, const void *, uint);
 void *memcpy(void *, const void *, uint);
+
+int sigalarm(int ticks, void (*handler)());
+int sigreturn(void);

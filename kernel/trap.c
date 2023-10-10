@@ -37,6 +37,7 @@ void
 usertrap(void)
 {
   int which_dev = 0;
+  int cur_ticks = 0;
 
   if((r_sstatus() & SSTATUS_SPP) != 0)
     panic("usertrap: not from user mode");
@@ -66,7 +67,22 @@ usertrap(void)
 
     syscall();
   } else if((which_dev = devintr()) != 0){
-    // ok
+    // devintr() 返回2即为时钟中断
+    if (which_dev == 2) {
+      if (p->ticks < 0) {
+        // ok
+      }else if (p->ticks == 0) {
+        cur_ticks = 0;
+        p->ticks = -1;
+        p->handler = 0;
+      }else {
+        cur_ticks++;
+        if (cur_ticks == p->ticks) {
+          (p->handler)();
+          cur_ticks = 0;
+        }
+      }
+    }
   } else {
     printf("usertrap(): unexpected scause %p pid=%d\n", r_scause(), p->pid);
     printf("            sepc=%p stval=%p\n", r_sepc(), r_stval());
@@ -77,8 +93,9 @@ usertrap(void)
     exit(-1);
 
   // give up the CPU if this is a timer interrupt.
-  if(which_dev == 2)
+  if(which_dev == 2) {
     yield();
+  }
 
   usertrapret();
 }

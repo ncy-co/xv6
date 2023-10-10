@@ -104,4 +104,6 @@ struct proc {
   struct file *ofile[NOFILE];  // Open files
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
+  int ticks;                   // sigalarm 中设置的警报间隔
+  void (*handler)();       // sigalarm 中设置的警报处理函数，即到时发生警报之后执行该函数
 };

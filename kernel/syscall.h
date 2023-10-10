@@ -1,3 +1,11 @@
+/* 
+ * Author: bye
+ * Date: 2023-10-08 10:17:45
+ * LastEditors: bye
+ * LastEditTime: 2023-10-10 14:47:23
+ * FilePath: /study/xv6-labs-2023/kernel/syscall.h
+ * Description: 
+ */
 // System call numbers
 #define SYS_fork    1
 #define SYS_exit    2
@@ -20,3 +28,5 @@
 #define SYS_link   19
 #define SYS_mkdir  20
 #define SYS_close  21
+#define SYS_sigalarm 22
+#define SYS_sigreturn 23
