@@ -1,3 +1,11 @@
+/* 
+ * Author: bye
+ * Date: 2023-10-04 13:54:23
+ * LastEditors: bye
+ * LastEditTime: 2023-10-11 19:42:18
+ * FilePath: /study/xv6-labs-2023/user/init.c
+ * Description: 
+ */
 // init: The initial user-level program
 
 #include "kernel/types.h"
@@ -17,6 +25,7 @@ main(void)
   int pid, wpid;
 
   if(open("console", O_RDWR) < 0){
+    // 创建一个console设备，在unix系统中，设备用文件来表示
     mknod("console", CONSOLE, 0);
     open("console", O_RDWR);
   }
