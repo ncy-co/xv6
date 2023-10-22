@@ -10,8 +10,28 @@
 #define STACK_SIZE  8192
 #define MAX_THREAD  4
 
+typedef struct context {
+  uint64 ra;
+  uint64 sp;
+
+  // callee-saved
+  uint64 s0;
+  uint64 s1;
+  uint64 s2;
+  uint64 s3;
+  uint64 s4;
+  uint64 s5;
+  uint64 s6;
+  uint64 s7;
+  uint64 s8;
+  uint64 s9;
+  uint64 s10;
+  uint64 s11;
+}context;
+
 
 struct thread {
+  context    context;
   char       stack[STACK_SIZE]; /* the thread's stack */
   int        state;             /* FREE, RUNNING, RUNNABLE */
 };
@@ -29,6 +49,7 @@ thread_init(void)
   current_thread->state = RUNNING;
 }
 
+// 进行线程切换
 void 
 thread_schedule(void)
 {
@@ -37,7 +58,10 @@ thread_schedule(void)
   /* Find another runnable thread. */
   next_thread = 0;
   t = current_thread + 1;
+  //printf("-------------------\n");
   for(int i = 0; i < MAX_THREAD; i++){
+    // printf("selected thread: %d\n", t - &all_thread[0]);
+    // printf("selected state: %d\n", t->state);
     if(t >= all_thread + MAX_THREAD)
       t = all_thread;
     if(t->state == RUNNABLE) {
@@ -46,6 +70,7 @@ thread_schedule(void)
     }
     t = t + 1;
   }
+  //printf("-------------------\n");
 
   if (next_thread == 0) {
     printf("thread_schedule: no runnable threads\n");
@@ -56,12 +81,18 @@ thread_schedule(void)
     next_thread->state = RUNNING;
     t = current_thread;
     current_thread = next_thread;
+    // printf("current_thread: %d\n", (t - &all_thread[0]));
+    // printf("next_thread: %d\n", (current_thread - &all_thread[0]));
     /* YOUR CODE HERE
      * Invoke thread_switch to switch from t to next_thread:
      * thread_switch(??, ??);
      */
-  } else
+    
+    thread_switch((uint64)(&(t->context)), (uint64)(&(current_thread->context)));
+  } else {
+    printf("current_thread == next_thread\n");
     next_thread = 0;
+  }
 }
 
 void 
@@ -74,6 +105,8 @@ thread_create(void (*func)())
   }
   t->state = RUNNABLE;
   // YOUR CODE HERE
+  t->context.ra = (uint64)func;
+  t->context.sp = (uint64)(&(t->stack[STACK_SIZE - 1]));
 }
 
 void 
@@ -138,6 +171,14 @@ thread_c(void)
   for (i = 0; i < 100; i++) {
     printf("thread_c %d\n", i);
     c_n += 1;
+    // printf("-------------------\n");
+    // struct thread * t = all_thread;
+    // for(int i = 0; i < MAX_THREAD; i++){
+    //   printf("selected thread: %d\n", t - &all_thread[0]);
+    //   printf("selected state: %d\n", t->state);
+    //   t = t + 1;
+    // }
+    // printf("-------------------\n");
     thread_yield();
   }
   printf("thread_c: exit after %d\n", c_n);

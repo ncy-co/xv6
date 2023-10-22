@@ -176,6 +176,7 @@ void
 uartintr(void)
 {
   // read and process incoming characters.
+  // 从 键盘 中读取字符，并将其传送至 console
   while(1){
     int c = uartgetc();
     if(c == -1)
@@ -183,6 +184,7 @@ uartintr(void)
     consoleintr(c);
   }
 
+  // 将字符写入到 UART 中的THR寄存器中，同时写入uart 中的buff
   // send buffered characters.
   acquire(&uart_tx_lock);
   uartstart();
